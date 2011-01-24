@@ -1,6 +1,10 @@
 package git.nerosatanas.mathgame;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Random;
+import java.util.Set;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,7 +31,7 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
 	 */
 	Button next;
 	Random gen;
-	int randomPosition[];
+	ArrayList<Integer> randomPosition = new ArrayList<Integer>();
 	
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +78,7 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
      * 
      */
     public void initGame(){
-    	this.gen = new Random(912313286L);
+    	this.gen = new Random();
         lvl = 10;
         int l = gen.nextInt(lvl)+1;
         int r = gen.nextInt(lvl)+1; 
@@ -101,15 +105,17 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
 			break;
 		}
         
-        options[randomPosition[0]].setText("A");
-        options[randomPosition[1]].setText("B");
-        options[randomPosition[2]].setText("C");
-        /*options[randomPosition[0]].setText(result+"");
+        //code for checking random positions =)
+        /* 
+         * options[randomPosition.get(0)].setText("A");
+        options[randomPosition.get(1)].setText("B");
+        options[randomPosition.get(2)].setText("C");
+        */
+        options[randomPosition.get(0)].setText(result+"");
         int temp = gen.nextInt(lvl);
-        options[randomPosition[1]].setText(result+temp+"");
+        options[randomPosition.get(1)].setText(result+temp+"");
         temp = gen.nextInt(lvl);
-        options[randomPosition[2]].setText(result-temp+"");
-        */   
+        options[randomPosition.get(2)].setText(result-temp+"");
     }
     
     
@@ -119,67 +125,15 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
      * 
      */
     public void initRandsPos(){
-    	randomPosition = new int[3];
-    	int n;
-    	int i;
-    	
-    	n = this.gen.nextInt(3);
-    	Log.w("**********************tag", n+"<-random");
-    	
-    	
-    	if(n == 2){
-    	  randomPosition[0] = n;
-    	  randomPosition[1] = n-1;
-    	  randomPosition[2] = n+2;
+    	int b;
+    	while(randomPosition.size() < 3){
+    		b = this.gen.nextInt(3);
+    		if(!randomPosition.contains(b)){
+    			randomPosition.add(b);
+    		}
     	}
-    	if(n == 1){
-      	  randomPosition[0] = n-1;
-      	  randomPosition[2] = n+1;
-      	  randomPosition[1] = n;
-      	}
-    	if(n == 0){
-        	  randomPosition[0] = n;
-        	  randomPosition[2] = n+1;
-        	  randomPosition[1] = n+2;
-        }
-    	
-    	Log.w("**********************tag", randomPosition[0]+"");
-    	Log.w("**********************tag", randomPosition[1]+"");
-    	Log.w("**********************tag", randomPosition[2]+"");
-        /*for(i = 0; i < randomPosition.length; i++){
-    		n = gen.nextInt(3);
-    		
-    		while(!isIn(n)){
-        		randomPosition[i] = n;
-    		}
-    		/*Log.w("********************+N: ", n+"");
-    		if(!isIn(n)){
-    		   randomPosition[i] = n;	
-    		}else{
-    			n = gen.nextInt(3);
-    			Log.w("********************+N: ESTABA!!! NUEVO ", n+"");
-    			if(!isIn(n))randomPosition[i] = n;
-    			else
-    				randomPosition[i] = gen.nextInt(3);
-    		}
-    	}*/
     }
     
-    /**
-     * 
-     * Check is a number is already in the positions array.
-     * 
-     * @param number
-     * @return boolean
-     */
-    
-    boolean isIn(int number){
-    	for(int i = 0; i < randomPosition.length; i++){
-    		if(number == randomPosition[i])
-    			return true;
-    	}
-    	return false;
-    }
 
 	public void onClick(View v) {
 		if(((Button)findViewById(v.getId())).getText().toString() == ""){
@@ -211,7 +165,7 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
 	public void nextLevel(){
 		Log.w("***************AAAAAAAAAAAa","Next lvl babe!!!!");
 		lvl += 3;
-		randomPosition = null;
+		randomPosition.clear();
 		chronometer.setBase(SystemClock.elapsedRealtime());
 		chronometer.start();
 		options[0].setEnabled(true);
@@ -221,4 +175,5 @@ public class MathGame extends Activity implements OnClickListener, OnChronometer
 		initGame();
 	}
 }
+
 
